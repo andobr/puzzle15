@@ -8,7 +8,7 @@ namespace Game15.Tests
     {
         public int[] correctSet = new int[] { 0, 1, 2, 3 };
         public int[] nonSquareSet = new int[] { 0, 1, 2, 3, 4 };
-        public int[] incorrectSet = new int[] { 0, 1, 2, 4 };
+        public int[] incorrectSet = new int[] { 0, 1, 2, 2 };
 
         public Point existingPoint = new Point(0, 0);
         public Point nonexistentPoint = new Point(2, 2);
@@ -16,8 +16,10 @@ namespace Game15.Tests
         public int existingPuzzle = 0;
         public int nonexistentPuzzle = 4;
 
-        public int movablePuzzle = 1;
-        public int immovablePuzzle = 3;
+        public int movablePuzzleBeforeFirstStep = 1;
+        public int immovablePuzzleBeforeFirstStep = 3;
+
+        public int movablePuzzleAfterFirstStep = 3;
 
         public virtual Game GameGenerator(int[] set)
         {
@@ -25,20 +27,47 @@ namespace Game15.Tests
         }
 
         [TestMethod]
-        public virtual void ShiftCorrectlyMovesMovablePuzzle()
+        public virtual void ShiftCorreclyMovesMovablePuzzles()
         {
             var game = GameGenerator(correctSet);
 
-            var newGame = game.Shift(movablePuzzle);
+            game = game.Shift(movablePuzzleBeforeFirstStep);
+            game = game.Shift(movablePuzzleAfterFirstStep);
 
-            Assert.AreSame(game, newGame);
+            Assert.AreEqual(1, game[0, 0]);
+            Assert.AreEqual(3, game[0, 1]);
+            Assert.AreEqual(2, game[1, 0]);
+            Assert.AreEqual(0, game[1, 1]);
+
+            Assert.AreEqual(new Point(1, 1), game.GetLocation(0));
+            Assert.AreEqual(new Point(0, 0), game.GetLocation(1));
+            Assert.AreEqual(new Point(1, 0), game.GetLocation(2));
+            Assert.AreEqual(new Point(0, 1), game.GetLocation(3));
+        }
+
+        [TestMethod]
+        public virtual void ShiftReturnCorrectObject()
+        {
+            var game = GameGenerator(correctSet);
+
+            var newGame = game.Shift(movablePuzzleBeforeFirstStep);
+
+            Assert.AreEqual(1, game[0, 0]);
+            Assert.AreEqual(0, game[0, 1]);
+            Assert.AreEqual(2, game[1, 0]);
+            Assert.AreEqual(3, game[1, 1]);
+
+            Assert.AreEqual(1, newGame[0, 0]);
+            Assert.AreEqual(0, newGame[0, 1]);
+            Assert.AreEqual(2, newGame[1, 0]);
+            Assert.AreEqual(3, newGame[1, 1]);
         }
 
         [TestMethod]
         [ExpectedException(typeof(ImmovablePuzzleException))]
         public void ShiftOfImmovablePuzzleThrowException()
         {
-            GameGenerator(correctSet).Shift(immovablePuzzle);
+            GameGenerator(correctSet).Shift(immovablePuzzleBeforeFirstStep);
         }
 
         [TestMethod]

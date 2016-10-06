@@ -10,6 +10,7 @@ namespace Game15
     {
         static void Main(string[] args)
         {
+
         }
     }
 }

@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace Game15
 {
-    [Serializable]
     public struct Point
     {
         public int x { get; set; }

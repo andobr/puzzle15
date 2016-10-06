@@ -9,20 +9,20 @@ namespace Game15
 {
     public class Game
     {
-        public int size;
-        public Hashtable positions;
+        protected int size;
+        protected Field field;
 
         public Game(params int[] numbers)
         {
             size = (int)Math.Sqrt(numbers.Length);
             CheckSquareNumber(numbers);
             CheckSet(numbers);
-            positions = new Hashtable(size * size * 2);
+            field = new Field(size);
             for (int x = 0; x < size; x++)
                 for (int y = 0; y < size; y++)
                 {
-                    positions.Add(new Point(x, y), numbers[x * size + y]);
-                    positions.Add(numbers[x * size + y], new Point(x, y));
+                    field.valuesByPoint.Add(new Point(x, y), numbers[x * size + y]);
+                    field.pointsByValue.Add(numbers[x * size + y], new Point(x, y));
                 }
         }
 
@@ -32,7 +32,7 @@ namespace Game15
             {
                 if (x >= size || 0 > x || y >= size || 0 > y)
                     throw new NonexistentPointException($"There is no point [{x},{y}]");
-                return (int)positions[new Point(x, y)];
+                return (int)field.valuesByPoint[new Point(x, y)];
             }
         }
 
@@ -45,43 +45,45 @@ namespace Game15
 
         private void CheckSet(int[] numbers)
         {
-            int count = 0;
-            for (int i = 0; i < numbers.Length; i++)
-                if (numbers.Contains(i))
-                    count++;
-            if (count != numbers.Length)
-                throw new IncorrectPuzzlesSetException("The set must contain all numbers from 0 to its length minus one");
+            List<int> correctNumbers = new List<int>();
+            for (int num = 0; num < numbers.Length; num++)
+                if (numbers.Contains(num) && !correctNumbers.Contains(num))
+                    correctNumbers.Add(num);
+                else
+                    throw new IncorrectPuzzlesSetException("The set must contain all numbers from 0 to its length minus one");
             return;
         }
 
         public virtual Point GetLocation(int value)
         {
-            if (!positions.ContainsValue(value))
+            if (!field.pointsByValue.ContainsKey(value))
                 throw new NonexistentPuzzleException($"There is no value {value}");
-            return (Point)positions[value];
+            return (Point)field.pointsByValue[value];
         }
 
-        public virtual Game Shift(int value)
+        public Game Shift(int value)
         {
-            Point valueIndex = GetLocation(value);
-            Point zeroIndex = GetLocation(0);
+            Point vPoint = GetLocation(value);
+            Point zPoint = GetLocation(0);
 
-            int x = valueIndex.x;
-            int y = valueIndex.y;
-
-            int x0 = zeroIndex.x;
-            int y0 = zeroIndex.y;
-
-            if (!(Math.Abs(x - x0) == 1 && y == y0 || Math.Abs(y - y0) == 1 && x == x0))
+            if (!(Math.Abs(vPoint.x - zPoint.x) == 1 && vPoint.y == zPoint.y || 
+                Math.Abs(vPoint.y - zPoint.y) == 1 && vPoint.x == zPoint.x))
             {
                 throw new ImmovablePuzzleException("Puzzle can not be moved");
             }
+            return Replace(value);
+        }
 
-            positions[new Point(x, y)] = 0;
-            positions[0] = new Point(x, y);
+        protected virtual Game Replace(int value)
+        {
+            Point vPoint = GetLocation(value);
+            Point zPoint = GetLocation(0);
 
-            positions[new Point(x0, y0)] = value;
-            positions[value] = new Point(x0, y0);
+            field.valuesByPoint[vPoint] = 0;
+            field.valuesByPoint[zPoint] = value;
+
+            field.pointsByValue[0] = vPoint;           
+            field.pointsByValue[value] = zPoint;
 
             return this;
         }

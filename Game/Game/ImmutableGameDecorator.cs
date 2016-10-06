@@ -9,7 +9,6 @@ using System.Threading.Tasks;
 
 namespace Game15
 {
-
     public class ImmutableGameDecorator : ImmutableGame
     {
         Queue<int> steps = new Queue<int>();
@@ -22,57 +21,44 @@ namespace Game15
             {
                 if (x >= size || 0 > x || y >= size || 0 > y)
                     throw new NonexistentPointException($"There is no point [{x},{y}]");
-                return (int)ApplySteps()[new Point(x, y)];
+                return (int)ApplySteps().valuesByPoint[new Point(x, y)];
             }
-        }
-
-        private Hashtable ApplySteps()
-        {
-            var temp = DeepClone(positions);
-            foreach (var i in steps)
-            {
-                Point pointV = GetLocation(i, temp);
-                Point point0 = GetLocation(0, temp);
-                temp[new Point(pointV.x, pointV.y)] = 0;
-                temp[0] = new Point(pointV.x, pointV.y);
-                temp[new Point(point0.x, pointV.y)] = i;
-                temp[i] = new Point(point0.x, pointV.y);
-            }
-            return temp;
         }
 
         private Point GetLocation(int value, Hashtable table)
         {
-            if (!table.ContainsValue(value))
+            if (!table.ContainsKey(value))
                 throw new NonexistentPuzzleException($"There is no value {value}");
             return (Point)table[value];
         }
 
         public override Point GetLocation(int value)
         {
-            if (!positions.ContainsValue(value))
+            if (!field.pointsByValue.ContainsKey(value))
                 throw new NonexistentPuzzleException($"There is no value {value}");
-            return (Point)ApplySteps()[value];
+            return (Point)ApplySteps().pointsByValue[value];
         }
 
-        public override Game Shift(int value)
+        private Field ApplySteps()
         {
-            Point valueIndex = GetLocation(value);
-            Point zeroIndex = GetLocation(0);
-
-            int x = valueIndex.x;
-            int y = valueIndex.y;
-
-            int x0 = zeroIndex.x;
-            int y0 = zeroIndex.y;
-
-            if (!(Math.Abs(x - x0) == 1 && y == y0 || Math.Abs(y - y0) == 1 && x == x0))
+            var temp = new Field(field);
+            foreach (var value in steps)
             {
-                throw new ImmovablePuzzleException("Puzzle can not be moved");
+                Point valuePoint = GetLocation(value, temp.pointsByValue);
+                Point zeroPoint = GetLocation(0, temp.pointsByValue);
+
+                temp.valuesByPoint[new Point(valuePoint.x, valuePoint.y)] = 0;
+                temp.valuesByPoint[new Point(zeroPoint.x, zeroPoint.y)] = value;
+
+                temp.pointsByValue[0] = new Point(valuePoint.x, valuePoint.y);
+                temp.pointsByValue[value] = new Point(zeroPoint.x, zeroPoint.y);
             }
+            return temp;
+        }
 
+        protected override Game Replace(int value)
+        {
             steps.Enqueue(value);
-
             return this;
         }
     }

@@ -12,13 +12,21 @@ namespace Game15.Tests
         }
 
         [TestMethod]
-        public override void ShiftCorrectlyMovesMovablePuzzle()
+        public override void ShiftReturnCorrectObject()
         {
             var game = GameGenerator(correctSet);
 
-            var newGame = game.Shift(movablePuzzle);
+            var newGame = game.Shift(movablePuzzleBeforeFirstStep);
 
-            Assert.AreNotSame(game, newGame);
+            Assert.AreEqual(0, game[0, 0]);
+            Assert.AreEqual(1, game[0, 1]);
+            Assert.AreEqual(2, game[1, 0]);
+            Assert.AreEqual(3, game[1, 1]);
+
+            Assert.AreEqual(1, newGame[0, 0]);
+            Assert.AreEqual(0, newGame[0, 1]);
+            Assert.AreEqual(2, newGame[1, 0]);
+            Assert.AreEqual(3, newGame[1, 1]);
         }
     }
 }

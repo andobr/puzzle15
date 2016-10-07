@@ -9,24 +9,24 @@ namespace Game15
 {
     public struct Field
     {
-        public Hashtable pointsByValue;
-        public Hashtable valuesByPoint;
+        public Dictionary<int, Point> pointsByValue;
+        public Dictionary<Point, int> valuesByPoint;
 
         public Field(int size)
         {
-            pointsByValue = new Hashtable(size * size);
-            valuesByPoint = new Hashtable(size * size);
+            pointsByValue = new Dictionary<int, Point>(size * size);
+            valuesByPoint = new Dictionary<Point, int>(size * size);
         }
 
         public Field(Field field)
         {
-            pointsByValue = new Hashtable(field.pointsByValue.Count);
-            valuesByPoint = new Hashtable(field.valuesByPoint.Count);
+            pointsByValue = new Dictionary<int, Point>(field.pointsByValue.Count);
+            valuesByPoint = new Dictionary<Point, int>(field.valuesByPoint.Count);
 
-            foreach (DictionaryEntry entry in field.pointsByValue)
+            foreach (var entry in field.pointsByValue)
                 pointsByValue.Add(entry.Key, entry.Value);
 
-            foreach (DictionaryEntry entry in field.valuesByPoint)
+            foreach (var entry in field.valuesByPoint)
                 valuesByPoint.Add(entry.Key, entry.Value);
         }
     }

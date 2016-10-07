@@ -21,22 +21,15 @@ namespace Game15
             {
                 if (x >= size || 0 > x || y >= size || 0 > y)
                     throw new NonexistentPointException($"There is no point [{x},{y}]");
-                return (int)ApplySteps().valuesByPoint[new Point(x, y)];
+                return ApplySteps().valuesByPoint[new Point(x, y)];
             }
-        }
-
-        private Point GetLocation(int value, Hashtable table)
-        {
-            if (!table.ContainsKey(value))
-                throw new NonexistentPuzzleException($"There is no value {value}");
-            return (Point)table[value];
         }
 
         public override Point GetLocation(int value)
         {
             if (!field.pointsByValue.ContainsKey(value))
                 throw new NonexistentPuzzleException($"There is no value {value}");
-            return (Point)ApplySteps().pointsByValue[value];
+            return ApplySteps().pointsByValue[value];
         }
 
         private Field ApplySteps()
@@ -44,8 +37,8 @@ namespace Game15
             var temp = new Field(field);
             foreach (var value in steps)
             {
-                Point valuePoint = GetLocation(value, temp.pointsByValue);
-                Point zeroPoint = GetLocation(0, temp.pointsByValue);
+                Point valuePoint = temp.pointsByValue[value]; 
+                Point zeroPoint = temp.pointsByValue[0]; 
 
                 temp.valuesByPoint[new Point(valuePoint.x, valuePoint.y)] = 0;
                 temp.valuesByPoint[new Point(zeroPoint.x, zeroPoint.y)] = value;

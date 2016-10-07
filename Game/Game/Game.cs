@@ -32,7 +32,7 @@ namespace Game15
             {
                 if (x >= size || 0 > x || y >= size || 0 > y)
                     throw new NonexistentPointException($"There is no point [{x},{y}]");
-                return (int)field.valuesByPoint[new Point(x, y)];
+                return field.valuesByPoint[new Point(x, y)];
             }
         }
 
@@ -58,7 +58,7 @@ namespace Game15
         {
             if (!field.pointsByValue.ContainsKey(value))
                 throw new NonexistentPuzzleException($"There is no value {value}");
-            return (Point)field.pointsByValue[value];
+            return field.pointsByValue[value];
         }
 
         public Game Shift(int value)

@@ -6,20 +6,39 @@ namespace Game15.Tests
     [TestClass]
     public class GameTest
     {
-        public int[] correctSet = new int[] { 0, 1, 2, 3 };
-        public int[] nonSquareSet = new int[] { 0, 1, 2, 3, 4 };
-        public int[] incorrectSet = new int[] { 0, 1, 2, 2 };
+        public int[] correctSet;
+        public int[] nonSquareSet;
+        public int[] incorrectSet;
 
-        public Point existingPoint = new Point(0, 0);
-        public Point nonexistentPoint = new Point(2, 2);
+        public Point existingPoint;
+        public Point nonexistentPoint;
 
-        public int existingPuzzle = 0;
-        public int nonexistentPuzzle = 4;
+        public int existingPuzzle;
+        public int nonexistentPuzzle;
 
-        public int movablePuzzleBeforeFirstStep = 1;
-        public int immovablePuzzleBeforeFirstStep = 3;
+        public int movablePuzzleBeforeFirstStep;
+        public int immovablePuzzleBeforeFirstStep;
 
-        public int movablePuzzleAfterFirstStep = 3;
+        public int movablePuzzleAfterFirstStep;
+
+        [TestInitialize()]
+        public void Initialize()
+        {
+            correctSet = new int[] { 0, 1, 2, 3 };
+            nonSquareSet = new int[] { 0, 1, 2, 3, 4 };
+            incorrectSet = new int[] { 0, 1, 2, 2 };
+
+            existingPoint = new Point(0, 0);
+            nonexistentPoint = new Point(2, 2);
+
+            existingPuzzle = 0;
+            nonexistentPuzzle = 4;
+
+            movablePuzzleBeforeFirstStep = 1;
+            immovablePuzzleBeforeFirstStep = 3;
+
+            movablePuzzleAfterFirstStep = 3;
+        }
 
         public virtual Game GameGenerator(int[] set)
         {

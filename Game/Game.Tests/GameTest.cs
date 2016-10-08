@@ -6,20 +6,20 @@ namespace Game15.Tests
     [TestClass]
     public class GameTest
     {
-        public int[] correctSet;
-        public int[] nonSquareSet;
-        public int[] incorrectSet;
+        protected int[] correctSet;
+        protected int[] nonSquareSet;
+        protected int[] incorrectSet;
 
-        public Point existingPoint;
-        public Point nonexistentPoint;
+        protected Point existingPoint;
+        protected Point nonexistentPoint;
 
-        public int existingPuzzle;
-        public int nonexistentPuzzle;
+        protected int existingPuzzle;
+        protected int nonexistentPuzzle;
 
-        public int movablePuzzleBeforeFirstStep;
-        public int immovablePuzzleBeforeFirstStep;
+        protected int movablePuzzleBeforeFirstStep;
+        protected int immovablePuzzleBeforeFirstStep;
 
-        public int movablePuzzleAfterFirstStep;
+        protected int movablePuzzleAfterFirstStep;
 
         [TestInitialize()]
         public void Initialize()
@@ -46,7 +46,7 @@ namespace Game15.Tests
         }
 
         [TestMethod]
-        public virtual void ShiftCorreclyMovesMovablePuzzles()
+        public virtual void ShiftCorrectlyMovesMovablePuzzles()
         {
             var game = GameGenerator(correctSet);
 

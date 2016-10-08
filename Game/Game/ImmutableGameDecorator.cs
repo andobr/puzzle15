@@ -37,14 +37,14 @@ namespace Game15
             var temp = new Field(field);
             foreach (var value in steps)
             {
-                Point valuePoint = temp.pointsByValue[value]; 
-                Point zeroPoint = temp.pointsByValue[0]; 
+                Point vPoint = temp.pointsByValue[value]; 
+                Point zPoint = temp.pointsByValue[0]; 
 
-                temp.valuesByPoint[new Point(valuePoint.x, valuePoint.y)] = 0;
-                temp.valuesByPoint[new Point(zeroPoint.x, zeroPoint.y)] = value;
+                temp.valuesByPoint[vPoint] = 0;
+                temp.valuesByPoint[zPoint] = value;
 
-                temp.pointsByValue[0] = new Point(valuePoint.x, valuePoint.y);
-                temp.pointsByValue[value] = new Point(zeroPoint.x, zeroPoint.y);
+                temp.pointsByValue[0] = vPoint;
+                temp.pointsByValue[value] = zPoint;
             }
             return temp;
         }
